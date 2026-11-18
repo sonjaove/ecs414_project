@@ -1,0 +1,52 @@
+import pandas as pd
+import numpy as np
+import yfinance as yf
+import requests
+from io import StringIO
+import os
+#reading the adjusted close prices for nifty500 stocks from the csv file
+df=pd.read_csv(r'nifty500_adjusted_close.csv')
+df
+#  Cleaning the data frame and calculating the log returns.
+# Count missing values in each column
+print(df.isna().sum())
+
+# Count non-finite values in numeric columns
+print(np.isfinite(df.select_dtypes(include=np.number)).sum())
+# Prepare the data for analysis by the following steps:
+prices = df.drop(columns=['Date']).copy()
+print("Percentage of missing values in each column:")
+missing_pct = prices.isna().mean() * 100
+
+missing_summary = missing_pct.sort_values(ascending=False)
+
+print(missing_summary.head(20))
+# Remove stocks with more than 20% missing prices
+prices = prices.loc[:, missing_pct <= 20]
+# calc log returns on the remaining prices.
+log_returns = np.log(prices / prices.shift(1))
+# Check missing returns
+print(log_returns.isna().sum().sort_values(ascending=False).head(20))
+
+# finding the correlation matrix to form the edges of the network graph
+#min_periods=60 ensures that we only consider pairs of stocks with at least 60 overlapping observations for correlation calculation.
+correlation_matrix = log_returns.corr(method='pearson', min_periods=60) 
+correlation_matrix
+
+# Create an unweighted adjacency matrix
+threshold = 0
+
+adjacency_matrix = (
+    correlation_matrix.abs() >= threshold
+).astype(int)
+
+# Remove diagonal (self-connections) without modifying the original array
+adjacency_matrix = adjacency_matrix * (
+    1 - np.eye(len(adjacency_matrix), dtype=int)
+)
+
+print(adjacency_matrix.head())
+print("Matrix shape:", adjacency_matrix.shape)
+print("Number of connections:", adjacency_matrix.values.sum() // 2)
+
+adjacency_matrix.to_csv("unweighted_adjacency_matrix.csv")
