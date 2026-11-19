@@ -4,6 +4,8 @@ import yfinance as yf
 import requests
 from io import StringIO
 import os
+
+
 #reading the adjusted close prices for nifty500 stocks from the csv file
 df=pd.read_csv(r'nifty500_adjusted_close.csv')
 df
@@ -17,16 +19,23 @@ print(np.isfinite(df.select_dtypes(include=np.number)).sum())
 prices = df.drop(columns=['Date']).copy()
 print("Percentage of missing values in each column:")
 missing_pct = prices.isna().mean() * 100
-
 missing_summary = missing_pct.sort_values(ascending=False)
-
 print(missing_summary.head(20))
 # Remove stocks with more than 20% missing prices
 prices = prices.loc[:, missing_pct <= 20]
 # calc log returns on the remaining prices.
 log_returns = np.log(prices / prices.shift(1))
+
+
 # Check missing returns
-print(log_returns.isna().sum().sort_values(ascending=False).head(20))
+missing_returns = log_returns.isna().sum().sort_values(ascending=False)
+print(missing_returns.head(20))
+# calculate the percentage of missing returns for each stock
+missing_pct = (log_returns.isna().mean() * 100).sort_values(ascending=False)
+print(missing_pct.head(20))
+# keeping only those stocks with less than or equal to 20% missing returns
+valid_stocks = missing_pct[missing_pct <= 20].index
+log_returns_clean = log_returns[valid_stocks].copy()
 
 # finding the correlation matrix to form the edges of the network graph
 #min_periods=60 ensures that we only consider pairs of stocks with at least 60 overlapping observations for correlation calculation.
@@ -34,7 +43,7 @@ correlation_matrix = log_returns.corr(method='pearson', min_periods=60)
 correlation_matrix
 
 # Create an unweighted adjacency matrix
-threshold = 0
+threshold = 0 # You can change this as you wish.
 
 adjacency_matrix = (
     correlation_matrix.abs() >= threshold
