@@ -7,7 +7,7 @@ import os
 
 
 #reading the adjusted close prices for nifty500 stocks from the csv file
-df=pd.read_csv(r'nifty500_adjusted_close.csv')
+df=pd.read_csv(r'nifty500_adjusted_close.csv') #or df=pd.read_csv(r'nifty100_adjusted_close.csv') depending on which dataset you want to analyze.
 df
 #  Cleaning the data frame and calculating the log returns.
 # Count missing values in each column
@@ -43,7 +43,7 @@ correlation_matrix = log_returns.corr(method='pearson', min_periods=60)
 correlation_matrix
 
 # Create an unweighted adjacency matrix
-threshold = 0 # You can change this as you wish.
+threshold = 0.2 # You can change this as you wish.
 
 adjacency_matrix = (
     correlation_matrix.abs() >= threshold
@@ -58,4 +58,6 @@ print(adjacency_matrix.head())
 print("Matrix shape:", adjacency_matrix.shape)
 print("Number of connections:", adjacency_matrix.values.sum() // 2)
 
-adjacency_matrix.to_csv("unweighted_adjacency_matrix.csv")
+adjacency_matrix.to_csv("unweighted_adjacency_matrix.csv") 
+# or adjacency_matrix.to_csv("unweighted_adjacency_matrix_nifty100.csv") depending on which dataset you want to analyze.
+
