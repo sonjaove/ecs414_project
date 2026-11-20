@@ -5,7 +5,7 @@ import requests
 from io import StringIO
 import os
 # Download and save adjusted close prices for a list of tickers for nifty500 stocks from Yahoo Finance
-url = "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv"
+url = "https://nsearchives.nseindia.com/content/indices/ind_nifty100list.csv"
 
 headers = {
     "User-Agent": "Mozilla/5.0"
@@ -50,6 +50,6 @@ for i in range(0, len(tickers), 50):
 adj_close_prices = pd.concat(all_prices, axis=1)
 
 print(adj_close_prices.head())
-adj_close_prices.to_csv("nifty500_adjusted_close.csv")
+adj_close_prices.to_csv("nifty100_adjusted_close.csv")
 print("Adjusted close prices saved to:")
-print(os.path.abspath("nifty500_adjusted_close.csv"))
+print(os.path.abspath("nifty100_adjusted_close.csv"))
