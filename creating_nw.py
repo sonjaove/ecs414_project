@@ -41,7 +41,10 @@ log_returns_clean = log_returns[valid_stocks].copy()
 #min_periods=60 ensures that we only consider pairs of stocks with at least 60 overlapping observations for correlation calculation.
 correlation_matrix = log_returns.corr(method='pearson', min_periods=60) 
 correlation_matrix
-
+# want to save the correlation matrix to a CSV file for future reference or analysis.
+correlation_matrix.to_csv("correlation_matrix.csv")
+print("Correlation matrix saved to:")
+print(os.path.abspath("correlation_matrix.csv"))
 # Create an unweighted adjacency matrix
 threshold = 0.2 # You can change this as you wish.
 
@@ -57,6 +60,9 @@ adjacency_matrix = adjacency_matrix * (
 print(adjacency_matrix.head())
 print("Matrix shape:", adjacency_matrix.shape)
 print("Number of connections:", adjacency_matrix.values.sum() // 2)
+
+print("Unweighted adjacency matrix saved to:")
+print(os.path.abspath("unweighted_adjacency_matrix.csv"))
 
 adjacency_matrix.to_csv("unweighted_adjacency_matrix.csv") 
 # or adjacency_matrix.to_csv("unweighted_adjacency_matrix_nifty100.csv") depending on which dataset you want to analyze.
