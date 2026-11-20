@@ -20,6 +20,24 @@ def save_figure(filename):
 
 adjacency_matrix = pd.read_csv("unweighted_adjacency_matrix_nifty100.csv", index_col=0)
 G = nx.from_pandas_adjacency(adjacency_matrix)
+
+# Visualize and save the binary adjacency matrix.
+plt.figure(figsize=(10, 8))
+sns.heatmap(
+    adjacency_matrix,
+    cmap='Blues',
+    vmin=0,
+    vmax=1,
+    xticklabels=False,
+    yticklabels=False,
+    cbar_kws={'label': 'Adjacency value'}
+)
+plt.title('Nifty 100 Stock Adjacency Matrix')
+plt.xlabel('Stocks')
+plt.ylabel('Stocks')
+plt.tight_layout()
+save_figure("adjacency_matrix_heatmap.png")
+
 plt.figure(figsize=(16, 12))
 
 pos = nx.spring_layout(G, seed=42, k=0.25)
