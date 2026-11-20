@@ -1,0 +1,4 @@
+Average Degree: 61.873684
+Median Degree: 69.000000
+Average Clustering Coefficient: 0.848570
+Sector Homophily: 0.020899
