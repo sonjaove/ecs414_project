@@ -22,7 +22,7 @@ The analysis includes:
 | `crawl_prices.py` | Downloads approximately three years of daily adjusted-close prices for Nifty 100 stocks from Yahoo Finance. |
 | `creating_nw.py` | Cleans prices, calculates log returns and correlations, and creates an unweighted adjacency matrix. |
 | `analysis.py` | Loads the network data, calculates network statistics, creates plots, and saves results. |
-| `trial_code.ipynb` | Notebook used for interactive exploration. |
+| `rough.ipynb` | Notebook used for interactive exploration. |
 | `nifty100_adjusted_close.csv` | Adjusted-close price data for the Nifty 100 stocks. |
 | `nifty500_adjusted_close.csv` | Alternative adjusted-close price dataset. |
 | `unweighted_adjacency_matrix_nifty100.csv` | Adjacency matrix used by `analysis.py`. |
@@ -93,6 +93,12 @@ python analysis.py
 The script also downloads the current NSE sector list to assign an industry
 sector to each graph node. An internet connection is therefore required for
 sector-colored plots.
+
+The first network plot and the sector homophily plot use the same stock
+correlation graph. The former emphasizes degree and the most connected stocks,
+while the latter repeats the network with nodes colored by sector and reports
+the sector assortativity coefficient. The homophily plot does not create a
+separate network or aggregate stocks into sector nodes.
 
 The analysis may take some time because it calculates betweenness centrality,
 eigenvector centrality, clustering coefficients, multiple threshold networks,
